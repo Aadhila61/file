@@ -11,6 +11,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,8 +26,8 @@
 </head>
 <style>
 #nav-img{
-        height:"80px";
-         width:"150px";
+        height:80px;
+         width:150px;
         padding-left: 15px;
         padding-top: 10px;
     }
@@ -35,7 +36,7 @@
         /* width:max-content; */
     }
     #text{
-        padding-top: 350px;
+        padding-top: 35px;
         font-weight: 500px;
     }
     #text-align{
@@ -81,46 +82,44 @@
 
 
 
-
-
 <?php
+
 include "connection.php";
 
-$name = $email = $phone = $password ="";
-if ($_SERVER["REQUEST_METHOD"] == "POST"){
-    if(isset($_POST['submit']))
-    $name=($_POST['name']);
-    $email=($_POST['email']);
-    $phone=($_POST['phone']);
-    $password=($_POST['password']);
+$name = $email = $phone = $password = $city = "";
 
- if(empty($_POST["name"]) && !empty($_POST["email"]) && !empty($_POST["phone"]) && !empty($_POST["password"]) ){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = ($_POST["name"]);
+    $email = ($_POST["email"]);
+    $phone = ($_POST["phone"]);
+    $password =($_POST["password"]);
+    $city = ($_POST["city"]);
 
-    $sql = "INSERT INTO kmap (name, email,phone,password)
-    VALUES ('$name', '$email', '$phone','$password')";
-
-    if ($conn->query($sql)) {
-
-    header("Location: submit.php");
-    echo "<br>";
-    echo "<br>";
+    // Check if all required fields are filled
+    if (!empty($name) && !empty($email) && !empty($phone) && !empty($password)) {
+        $sql = "INSERT INTO tax (name, email, phone, password, city) VALUES ('$name', '$email', '$phone', '$password', '$city')";
+        
+        if ($conn->query($sql) === TRUE) {
+            // Redirect after successful insertion
+            header("Location: submit.php");
+            exit();
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
     } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "All fields are required";
     }
 }
 
 function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 
 $conn->close();
 ?>
-
-
 
 <body>
 
@@ -194,7 +193,7 @@ $conn->close();
                           </div></div>
                         </div>
                         <div class="form-group col-md-6">
-                            <button type="submit" class="btn btn-warning" id="button">Submit</button>
+                            <button type="submit" class="btn btn-info" id="button">Submit</button>
                         </div>
 
 
